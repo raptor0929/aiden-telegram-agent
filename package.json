@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "aiden-telegram-agent",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@coinbase/agentkit": "^0.6.0",
+    "@coinbase/agentkit-langchain": "^0.3.0",
+    "@coinbase/agentkit-vercel-ai-sdk": "^0.1.0",
     "@hookform/resolvers": "^3.9.1",
+    "@langchain/core": "^0.3.19",
+    "@langchain/langgraph": "^0.2.21",
+    "@langchain/openai": "^0.3.14",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
