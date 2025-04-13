@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.env
+*.lock
+
+# JetBrains IDEs
+.idea/
+.next/
