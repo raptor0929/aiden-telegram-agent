@@ -1,6 +1,8 @@
 # Aiden - Community Manager for Telegram
 
-Autonomous Agent that interacts with a community in Telegram
+![AIDEN Architecture](public/aiden-infra.png)
+
+This is a hierarchical AI agent system for community management, with AIDEN as the high-level planner that coordinates specialized agents.
 
 ## Setting up the Agent
 

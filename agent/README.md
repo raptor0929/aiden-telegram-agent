@@ -1,8 +1,8 @@
 # AIDEN: Hierarchical AI Community Management System
 
-This example demonstrates a hierarchical AI agent system for community management, with AIDEN as the high-level planner that coordinates specialized agents.
+![AIDEN Architecture](../public/aiden-infra.png)
 
-![AIDEN Architecture](https://placehold.co/600x400/EEE/31343C?text=AIDEN+Architecture)
+This is a hierarchical AI agent system for community management, with AIDEN as the high-level planner that coordinates specialized agents.
 
 ## System Architecture
 
@@ -85,22 +85,23 @@ This feature demonstrates best practices for building custom functions with the 
 
 ## Getting Started
 
-1. Clone the repository
-2. Create a `.env` file in the `examples/aiden-community-management` directory with:
+1. Install dependencies:
+   ```sh
+   npm install
    ```
-   API_KEY=your_api_key
-   OPENAI_API_KEY=your_openai_api_key
+
+2. Configure your environment variables:
+   ```sh
+   mv .env.example .env
    ```
-3. Run `npm install` in the root directory
-4. Install additional dependencies:
+   Then edit the `.env` file to add your Telegram bot token and OpenAI API key.
+
+3. Start the Aiden Telegram Agent:
+   ```sh
+   npm run aiden
    ```
-   npm install axios
-   ```
-5. Start the AIDEN system:
-   ```
-   cd examples/aiden-community-management
-   npm run start
-   ```
+
+You should see the message "🤖 Aiden Telegram Agent - Started" confirming that the agent is running successfully.
 
 ## System State
 
