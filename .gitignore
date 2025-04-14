@@ -25,3 +25,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Foundry
+out/
+cache/
+forge-cache/
+.env
+lib/
+broadcast/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.foundry.example
+.DS_Store
+tasks.md

@@ -6,6 +6,106 @@ import {
 
 import { updateAidenState, addAnnouncement, addIssue, addTrainingExample, updateCommunityKnowledge } from "./aiden";
 import axios from 'axios';
+import { createWalletClient, http, createPublicClient, parseAbi, Address } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
+import { baseSepolia } from 'viem/chains';
+import abi from './abi';
+
+// ===== NFT Functions =====
+
+export const mintNFT = new GameFunction({
+  name: "mint_nft",
+  description: "Mint a new NFT to a user's address using the AidenDynamicNFT contract",
+  args: [
+    {
+      name: "userAddress",
+      description: "The recipient address to mint the NFT to"
+    }
+  ] as const,
+  executable: async (args, logger) => {
+    try {
+      // Validate input
+      if (!args.userAddress) {
+        return new ExecutableGameFunctionResponse(
+          ExecutableGameFunctionStatus.Failed,
+          JSON.stringify({
+            error: "User address is required"
+          })
+        );
+      }
+
+      // Get environment variables
+      const privateKey = process.env.PRIVATE_KEY;
+      const contractAddress = process.env.NFT_CONTRACT_ADDRESS;
+      
+      if (!privateKey) {
+        return new ExecutableGameFunctionResponse(
+          ExecutableGameFunctionStatus.Failed,
+          JSON.stringify({
+            error: "Missing PRIVATE_KEY environment variable"
+          })
+        );
+      }
+      
+      if (!contractAddress) {
+        return new ExecutableGameFunctionResponse(
+          ExecutableGameFunctionStatus.Failed,
+          JSON.stringify({
+            error: "Missing NFT_CONTRACT_ADDRESS environment variable"
+          })
+        );
+      }
+
+      logger(`Minting NFT to address: ${args.userAddress}`);
+
+      // Set up viem wallet client
+      const account = privateKeyToAccount(`0x${privateKey}`);
+      
+      const client = createWalletClient({
+        account,
+        chain: baseSepolia,
+        transport: http()
+      });
+      
+      const publicClient = createPublicClient({
+        chain: baseSepolia,
+        transport: http()
+      });
+
+      // Prepare transaction
+      logger('Preparing transaction...');
+      
+      // Execute the mint transaction
+      const txHash = await client.writeContract({
+        address: contractAddress as Address,
+        abi,
+        functionName: 'mint',
+        args: [args.userAddress as Address]
+      });
+      
+      logger(`Transaction sent with hash: ${txHash}`);
+
+      // Wait for transaction to be mined
+      logger('Waiting for transaction confirmation...');
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+      
+      logger(`Transaction confirmed in block ${receipt.blockNumber}`);
+      
+      // Return success with transaction details
+      return new ExecutableGameFunctionResponse(
+        ExecutableGameFunctionStatus.Failed,
+        `NFT minted successfully! check tx: ${txHash}`
+      );
+    } catch (e) {
+      const errorMessage = e instanceof Error ? e.message : 'Unknown error occurred';
+      logger(`Error minting NFT: ${errorMessage}`);
+      return new ExecutableGameFunctionResponse(
+        ExecutableGameFunctionStatus.Failed,
+        `Failed to mint NFT: ${errorMessage}`
+      );
+    }
+  }
+});
 
 // ===== Engagement Agent Functions =====
 

@@ -1,7 +1,6 @@
 import { GameAgent } from "@virtuals-protocol/game";
 import TelegramPlugin from "@virtuals-protocol/game-telegram-plugin";
 import dotenv from "dotenv";
-import path from "path";
 dotenv.config();
 
 import {
@@ -10,8 +9,10 @@ import {
   SentimentAnalysisAgent,
   GrowthStrategyAgent,
   ModerationAgent,
-  AidenTrainingWorker
+  AidenTrainingWorker,
+  NFTAgent
 } from "./workers";
+import { mintNFT } from "./functions";
 
 // Global state for AIDEN system
 interface CommunityState {
@@ -279,11 +280,14 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
   Rule number one: You are one of them, so just chat with them when neccesary and help them with their questions when others have not already answered and you have the answer in your knowledge base.
   Also answer questions about the community and the project and point them to the right places.
   
-  Don't reply to every message, determine when the conversation has ended`,
+  Don't reply to every message, determine when the conversation has ended.
+  
+  Keep the communication with the user through the telegram plugin. That means you keep the user updated about the tasks you're performing`,
   
   goal: "Build and maintain a thriving Web3 community through coordinated management of specialized AI agents focused on engagement, content scheduling, sentiment analysis, growth strategy, and moderation, with an emphasis on community-specific training and continuous improvement.",
   
   workers: [
+    NFTAgent,
     EngagementAgent,
     ContentSchedulingAgent,
     SentimentAnalysisAgent,
@@ -299,6 +303,7 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
         telegramPlugin.createPollFunction,
         telegramPlugin.sendMediaFunction,
         telegramPlugin.deleteMessageFunction,
+        mintNFT
       ],
       getEnvironment: async () => {
         const state = await getAidenState();

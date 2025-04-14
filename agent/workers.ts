@@ -16,10 +16,30 @@ import {
   flagSuspiciousUsers,
   enforceGuidelines,
   analyzeWeb3CommunityMetrics,
-  trainAgent
+  trainAgent,
+  mintNFT
 } from "./functions";
 
 import { getAidenState } from "./aiden";
+
+// NFT Agent Worker
+export const NFTAgent = new GameWorker({
+  id: "nft_agent",
+  name: "NFT Agent",
+  description: `You are a specialized NFT Agent responsible for minting NFTs for community members. You mint the NFT to the user's address when they request it.`,
+  
+  functions: [
+    mintNFT
+  ],
+  
+  getEnvironment: async () => {
+    const state = await getAidenState();
+    return {
+      communityState: state,
+      nftContractAddress: process.env.NFT_CONTRACT_ADDRESS
+    };
+  }
+});
 
 // 1. Engagement Agent Worker
 export const EngagementAgent = new GameWorker({
