@@ -4,7 +4,7 @@ import {
   ExecutableGameFunctionStatus 
 } from "@virtuals-protocol/game";
 
-import { updateAidenState, addAnnouncement, addIssue, addTrainingExample, updateCommunityKnowledge } from "./aiden";
+import { updateAidogState, addAnnouncement, addIssue, addTrainingExample, updateCommunityKnowledge } from "./aidog";
 import axios from 'axios';
 import { createWalletClient, http, createPublicClient, parseAbi, Address } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -15,7 +15,7 @@ import abi from './abi';
 
 export const mintNFT = new GameFunction({
   name: "mint_nft",
-  description: "Mint a new NFT to a user's address using the AidenDynamicNFT contract",
+  description: "Mint a new NFT to a user's address using the AidogDynamicNFT contract",
   args: [
     {
       name: "userAddress",
@@ -452,10 +452,10 @@ export const draftResponse = new GameFunction({
       logger(`Analyzing and drafting response to query: ${args.user_query} on ${args.platform}`);
       
       // Get current community state
-      const currentState = await import("./aiden").then(m => m.getAidenState());
+      const currentState = await import("./aidog").then(m => m.getAidogState());
       
       // Update engagement score in community state
-      updateAidenState({
+      updateAidogState({
         engagementScore: Math.min(100, currentState.engagementScore + 2),
         activeTasks: currentState.activeTasks + 1
       });
@@ -626,8 +626,8 @@ export const coordinatePostingSchedules = new GameFunction({
       : args.platforms;
     
     // Update community state
-    updateAidenState({
-      activeTasks: (await import("./aiden").then(m => m.getAidenState())).activeTasks + 1
+    updateAidogState({
+      activeTasks: (await import("./aidog").then(m => m.getAidogState())).activeTasks + 1
     });
     
     // Simulate creating a coordinated schedule
@@ -689,8 +689,8 @@ export const analyzeEngagementPatterns = new GameFunction({
     };
     
     // Update the community state with new data
-    updateAidenState({
-      engagementScore: Math.min(100, (await import("./aiden").then(m => m.getAidenState())).engagementScore + 3)
+    updateAidogState({
+      engagementScore: Math.min(100, (await import("./aidog").then(m => m.getAidogState())).engagementScore + 3)
     });
     
     return new ExecutableGameFunctionResponse(
@@ -781,10 +781,10 @@ export const identifyCommunityIssues = new GameFunction({
       .forEach(issue => addIssue(issue.issue));
     
     // Update sentiment score based on issues
-    const currentState = await import("./aiden").then(m => m.getAidenState());
+    const currentState = await import("./aidog").then(m => m.getAidogState());
     const sentimentAdjustment = potentialIssues.length * -3; // Reduce sentiment based on number of issues
     
-    updateAidenState({
+    updateAidogState({
       sentimentScore: Math.max(-100, Math.min(100, currentState.sentimentScore + sentimentAdjustment)),
       activeTasks: currentState.activeTasks + 1
     });
@@ -803,7 +803,7 @@ export const generateSentimentReport = new GameFunction({
   executable: async (args, logger) => {
     logger("Generating comprehensive sentiment analysis report...");
     
-    const currentState = await import("./aiden").then(m => m.getAidenState());
+    const currentState = await import("./aidog").then(m => m.getAidogState());
     
     // Simulate sentiment report generation
     const sentimentReport = {
@@ -847,7 +847,7 @@ export const analyzeGrowthPatterns = new GameFunction({
   executable: async (args, logger) => {
     logger("Analyzing community growth patterns...");
     
-    const currentState = await import("./aiden").then(m => m.getAidenState());
+    const currentState = await import("./aidog").then(m => m.getAidogState());
     
     // Simulate growth pattern analysis
     const growthAnalysis = {
@@ -889,8 +889,8 @@ export const suggestTargetedCampaigns = new GameFunction({
     logger("Developing targeted campaign suggestions...");
     
     // Update community state
-    updateAidenState({
-      activeTasks: (await import("./aiden").then(m => m.getAidenState())).activeTasks + 1
+    updateAidogState({
+      activeTasks: (await import("./aidog").then(m => m.getAidogState())).activeTasks + 1
     });
     
     // Simulate campaign suggestions
@@ -968,8 +968,8 @@ export const recommendIncentiveStructures = new GameFunction({
     ];
     
     // Update community metrics
-    const currentState = await import("./aiden").then(m => m.getAidenState());
-    updateAidenState({
+    const currentState = await import("./aidog").then(m => m.getAidogState());
+    updateAidogState({
       growthRate: currentState.growthRate * 1.05, // Simulate 5% growth improvement
       communityHealth: Math.min(100, currentState.communityHealth + 2)
     });
@@ -1024,8 +1024,8 @@ export const identifyHarmfulContent = new GameFunction({
       };
       
       // Update community health based on harmful content detected
-      const currentState = await import("./aiden").then(m => m.getAidenState());
-      updateAidenState({
+      const currentState = await import("./aidog").then(m => m.getAidogState());
+      updateAidogState({
         communityHealth: Math.max(0, currentState.communityHealth - potentiallyHarmfulContent.flagged_content.length)
       });
       
@@ -1107,8 +1107,8 @@ export const enforceGuidelines = new GameFunction({
     logger(`Enforcing guidelines for ${args.violation_type} with action: ${args.recommended_action}`);
     
     // Update community state
-    const currentState = await import("./aiden").then(m => m.getAidenState());
-    updateAidenState({
+    const currentState = await import("./aidog").then(m => m.getAidogState());
+    updateAidogState({
       activeTasks: currentState.activeTasks + 1,
       communityHealth: Math.min(100, currentState.communityHealth + 1) // Enforcement improves health
     });
@@ -1169,7 +1169,7 @@ export const analyzeWeb3CommunityMetrics = new GameFunction({
       logger(`Analyzing Web3 community metrics for ${timePeriod} period across ${platforms.join(', ')}`);
       
       // Get current community state
-      const currentState = await import("./aiden").then(m => m.getAidenState());
+      const currentState = await import("./aidog").then(m => m.getAidogState());
       
       // Demonstrate fetching different types of metrics
       const metricResults: Record<string, any> = {};
@@ -1293,7 +1293,7 @@ export const analyzeWeb3CommunityMetrics = new GameFunction({
       };
       
       // Update community state with new data
-      updateAidenState({
+      updateAidogState({
         activeTasks: currentState.activeTasks + 1,
         lastUpdated: new Date().toISOString()
       });

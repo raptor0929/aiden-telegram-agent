@@ -1,6 +1,6 @@
-# Aiden NFT Minting Function
+# Aidog NFT Minting Function
 
-The Aiden Telegram Agent includes a function to mint NFTs from the AidenDynamicNFT contract deployed on Base Sepolia testnet.
+The Aidog Telegram Agent includes a function to mint NFTs from the AidogDynamicNFT contract deployed on Base Sepolia testnet.
 
 ## Overview
 
@@ -21,7 +21,7 @@ NFT_CONTRACT_ADDRESS=contract_address_here
 ```
 
 - `PRIVATE_KEY`: The private key of the wallet that will pay gas fees for minting (without the 0x prefix)
-- `NFT_CONTRACT_ADDRESS`: The address of the AidenDynamicNFT contract on Base Sepolia
+- `NFT_CONTRACT_ADDRESS`: The address of the AidogDynamicNFT contract on Base Sepolia
 
 ## Usage
 
@@ -69,4 +69,4 @@ The function handles several error conditions:
 
 ## Implementation
 
-The function is implemented in `functions.ts` and uses the viem library to interact with the blockchain. It's integrated into the NFTAgent worker in `workers.ts` and registered with the Aiden agent in `aiden.ts`. 
+The function is implemented in `functions.ts` and uses the viem library to interact with the blockchain. It's integrated into the NFTAgent worker in `workers.ts` and registered with the Aidog agent in `aidog.ts`. 

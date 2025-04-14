@@ -1,5 +1,5 @@
 {
-  "name": "aiden-telegram-agent",
+  "name": "aidog-telegram-agent",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -55,6 +55,7 @@
     "date-fns": "4.1.0",
     "dotenv": "^16.4.7",
     "embla-carousel-react": "8.5.1",
+    "ethers": "^6.13.5",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",

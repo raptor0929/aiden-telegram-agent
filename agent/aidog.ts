@@ -9,12 +9,12 @@ import {
   SentimentAnalysisAgent,
   GrowthStrategyAgent,
   ModerationAgent,
-  AidenTrainingWorker,
+  AidogTrainingWorker,
   NFTAgent
 } from "./workers";
 import { mintNFT } from "./functions";
 
-// Global state for AIDEN system
+// Global state for AIDOG system
 interface CommunityState {
   activeTasks: number;
   communityHealth: number; // 0-100
@@ -148,12 +148,12 @@ let communityState: CommunityState = {
 };
 
 // Function to get current state
-export const getAidenState = async () => {
+export const getAidogState = async () => {
   return communityState;
 };
 
 // Function to update state
-export const updateAidenState = (newState: Partial<CommunityState>) => {
+export const updateAidogState = (newState: Partial<CommunityState>) => {
   communityState = {
     ...communityState,
     ...newState,
@@ -240,10 +240,10 @@ export const telegramPlugin = new TelegramPlugin({
   },
 });
 
-// Create the AIDEN high-level planner agent
-export const aiden = new GameAgent(process.env.API_KEY || "", {
-  name: "AIDEN",
-  description: `You are AIDEN, an advanced AI high-level planning system for community management.
+// Create the AIDOG high-level planner agent
+export const aidog = new GameAgent(process.env.API_KEY || "", {
+  name: "AIDOG",
+  description: `You are AIDOG, an advanced AI high-level planning system for community management.
   
   Your primary responsibilities are to:
   
@@ -293,7 +293,7 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
     SentimentAnalysisAgent,
     GrowthStrategyAgent,
     ModerationAgent,
-    AidenTrainingWorker,
+    AidogTrainingWorker,
     telegramPlugin.getWorker({
       // Define the functions that the worker can perform, by default it will use the all functions defined in the plugin
       functions: [
@@ -306,7 +306,7 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
         mintNFT
       ],
       getEnvironment: async () => {
-        const state = await getAidenState();
+        const state = await getAidogState();
         return {
           communityState: state
         };
@@ -314,5 +314,5 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
     }),
   ],
   
-  getAgentState: getAidenState
+  getAgentState: getAidogState
 }); 

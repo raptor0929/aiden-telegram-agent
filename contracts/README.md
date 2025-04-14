@@ -1,6 +1,6 @@
-# Aiden Dynamic NFT
+# Aidog Dynamic NFT
 
-A dynamic NFT contract for the Aiden Telegram Agent that can update its metadata through Pinata.
+A dynamic NFT contract for the Aidog Telegram Agent that can update its metadata through Pinata.
 
 ## Features
 
@@ -20,7 +20,7 @@ A dynamic NFT contract for the Aiden Telegram Agent that can update its metadata
 1. Clone this repository:
    ```
    git clone <repository-url>
-   cd aiden-telegram-agent
+   cd aidog-telegram-agent
    ```
 
 2. Install dependencies:
@@ -47,7 +47,7 @@ forge build
 
 2. Deploy using the deployment script:
    ```
-   forge script script/DeployAidenNFT.s.sol:DeployAidenNFT --rpc-url base_sepolia --broadcast --verify
+   forge script script/DeployAidogNFT.s.sol:DeployAidogNFT --rpc-url base_sepolia --broadcast --verify
    ```
 
 ## Metadata and Image

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { baseSepolia } from 'viem/chains';
+import { ethers } from 'ethers';
 
 // Define window ethereum type
 declare global {
@@ -9,54 +9,23 @@ declare global {
 }
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_AGENT_DEPLOYMENT_CONTRACT || '';
+const TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TOKEN_ADDRESS || '';
 
-export const agentDeploymentABI = [
-  {
-    inputs: [],
-    name: 'payDeploymentFee',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [{ name: 'user', type: 'address' }],
-    name: 'checkPaymentStatus',
-    outputs: [{ name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'deploymentFee',
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-] as const;
+// Simple ABI definitions
+const AGENT_DEPLOYMENT_ABI = [
+  'function payDeploymentFee()',
+  'function checkPaymentStatus(address _user) view returns (bool)',
+  'function deploymentFee() view returns (uint256)',
+  'function token() view returns (address)'
+];
 
-// ABI encoding helpers
-const encodeCheckPaymentStatus = (address: string) => {
-  // Function signature: checkPaymentStatus(address)
-  // keccak256("checkPaymentStatus(address)") = 0x5a8386a2...
-  const functionSelector = '0x5a8386a2';
-  const encodedAddress = address.slice(2).padStart(64, '0');
-  return `${functionSelector}${encodedAddress}`;
-};
-
-const encodeDeploymentFee = () => {
-  // Function signature: deploymentFee()
-  // keccak256("deploymentFee()") = 0x64b0e37e...
-  return '0x64b0e37e';
-};
-
-const encodePayDeploymentFee = () => {
-  // Function signature: payDeploymentFee()
-  // keccak256("payDeploymentFee()") = 0x50d3cf63...
-  return '0x50d3cf63';
-};
+const ERC20_ABI = [
+  'function allowance(address owner, address spender) view returns (uint256)',
+  'function approve(address spender, uint256 amount) returns (bool)'
+];
 
 export function useAgentDeployment() {
-  const [account, setAccount] = useState<`0x${string}` | null>(null);
+  const [account, setAccount] = useState<string | null>(null);
   const [isPaid, setIsPaid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isBrowser, setIsBrowser] = useState(false);
@@ -74,7 +43,7 @@ export function useAgentDeployment() {
       if (accounts.length === 0) {
         setAccount(null);
       } else {
-        setAccount(accounts[0] as `0x${string}`);
+        setAccount(accounts[0]);
       }
     };
 
@@ -109,22 +78,10 @@ export function useAgentDeployment() {
     if (!account || !isBrowser || typeof window === 'undefined' || !window.ethereum) return false;
     
     try {
-      // Use eth_call to call the checkPaymentStatus function
-      const data = encodeCheckPaymentStatus(account);
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, AGENT_DEPLOYMENT_ABI, provider);
       
-      const result = await window.ethereum.request({
-        method: 'eth_call',
-        params: [
-          {
-            to: CONTRACT_ADDRESS,
-            data: data,
-          },
-          'latest',
-        ],
-      });
-      
-      // Result will be a hex string, convert to boolean
-      const status = result === '0x0000000000000000000000000000000000000000000000000000000000000001';
+      const status = await contract.checkPaymentStatus(account);
       setIsPaid(status);
       return status;
     } catch (error) {
@@ -143,6 +100,12 @@ export function useAgentDeployment() {
   // Switch to Base Sepolia network
   const switchToBaseSepolia = async () => {
     if (typeof window === 'undefined' || !window.ethereum || !isBrowser) return false;
+
+    // Base Sepolia chain ID
+    const baseSepolia = {
+      id: 84532,
+      name: 'Base Sepolia Testnet',
+    };
 
     try {
       // Try to switch to the Base Sepolia network
@@ -198,55 +161,51 @@ export function useAgentDeployment() {
         throw new Error('Failed to switch to Base Sepolia network');
       }
 
-      // Get the deployment fee
-      const feeHex = await window.ethereum.request({
-        method: 'eth_call',
-        params: [
-          {
-            to: CONTRACT_ADDRESS,
-            data: encodeDeploymentFee(),
-          },
-          'latest',
-        ],
-      });
+      // Create ethers provider and signer
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
       
-      // Fee is returned as a hex string
-      const fee = feeHex;
-
-      // Send the transaction
-      const transactionHash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [
-          {
-            from: account,
-            to: CONTRACT_ADDRESS,
-            value: fee,
-            data: encodePayDeploymentFee(),
-          },
-        ],
-      });
-
-      console.log('Transaction hash:', transactionHash);
+      // Create contract instances
+      const deploymentContract = new ethers.Contract(CONTRACT_ADDRESS, AGENT_DEPLOYMENT_ABI, signer);
       
-      // Wait for transaction confirmation by polling
-      let confirmed = false;
-      while (!confirmed) {
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Poll every 2 seconds
-        
-        const receipt = await window.ethereum.request({
-          method: 'eth_getTransactionReceipt',
-          params: [transactionHash],
-        });
-        
-        if (receipt && receipt.blockNumber) {
-          confirmed = true;
-          console.log('Transaction confirmed in block:', parseInt(receipt.blockNumber, 16));
-        }
+      // Get token address
+      let tokenAddress = TOKEN_ADDRESS;
+      if (!tokenAddress) {
+        tokenAddress = await deploymentContract.token();
       }
+      
+      // Create token contract instance
+      const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
+
+      // Get the deployment fee
+      const fee = await deploymentContract.deploymentFee();
+      
+      // Check current allowance
+      const allowance = await tokenContract.allowance(account, CONTRACT_ADDRESS);
+      
+      // If allowance is less than fee, approve first
+      if (allowance < fee) {
+        console.log('Approving token spend...');
+        const approveTx = await tokenContract.approve(CONTRACT_ADDRESS, fee);
+        console.log('Approve transaction hash:', approveTx.hash);
+        
+        // Wait for confirmation
+        const approveReceipt = await approveTx.wait();
+        console.log('Approval confirmed in block:', approveReceipt?.blockNumber);
+      }
+
+      // Send the transaction to pay deployment fee
+      console.log('Paying deployment fee...');
+      const tx = await deploymentContract.payDeploymentFee();
+      console.log('Transaction hash:', tx.hash);
+      
+      // Wait for transaction confirmation
+      const receipt = await tx.wait();
+      console.log('Transaction confirmed in block:', receipt?.blockNumber);
       
       // Once confirmed, update the payment status
       setIsPaid(true);
-      return transactionHash;
+      return tx.hash;
     } catch (error) {
       console.error('Error paying deployment fee:', error);
       throw error;

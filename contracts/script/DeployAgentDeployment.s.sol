@@ -12,7 +12,7 @@ contract DeployAgentDeployment is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         AgentDeployment deployment = new AgentDeployment(
-            0x036CbD53842c5426634e7929541eC2318f3dCF7e,
+            0x036CbD53842c5426634e7929541eC2318f3dCF7e, // usdc base sepolia
             deploymentFee
         );
 

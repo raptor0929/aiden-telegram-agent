@@ -21,7 +21,7 @@ contract AidogDynamicNFT is ERC721, Ownable {
     event MetadataUpdated(uint256 indexed tokenId, uint256 version);
     event BaseURIUpdated(string newBaseURI);
 
-    constructor(string memory initialBaseURI) ERC721("AidoogDynamicNFT", "ADNFT") Ownable(msg.sender) {
+    constructor(string memory initialBaseURI) ERC721("AidogDynamicNFT", "ADNFT") Ownable(msg.sender) {
         _baseTokenURI = initialBaseURI;
     }
 

@@ -1,8 +1,8 @@
-# Aiden - Community Manager for Telegram
+#Aidog - Community Manager for Telegram
 
-![AIDEN Architecture](public/aiden-infra.png)
+![AIDOG Architecture](public/aidog-infrastructure.png)
 
-This is a hierarchical AI agent system for community management, with AIDEN as the high-level planner that coordinates specialized agents.
+This is a hierarchical AI agent system for community management, with AIDOG as the high-level planner that coordinates specialized agents.
 
 ## Setting up the Agent
 
@@ -27,7 +27,7 @@ cp .env.example .env
 Run the development server:
 
 ```sh
-pnpm run aiden
+pnpm run aidog
 ```
 
 ## Setting up the Dashboard Metrics

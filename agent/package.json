@@ -1,5 +1,5 @@
 {
-  "name": "aiden",
+  "name": "aidog",
   "private": true,
   "dependencies": {
     "@virtuals-protocol/game": "^0.1.9",
@@ -13,7 +13,7 @@
   "scripts": {
     "start": "ts-node -P ./tsconfig.json",
     "build": "tsc -p ./tsconfig.json",
-    "aiden": "ts-node index.ts"
+    "aidog": "ts-node index.ts"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",
