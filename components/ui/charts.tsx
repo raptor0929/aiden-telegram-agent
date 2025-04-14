@@ -3,7 +3,7 @@
 // This is a placeholder component for charts
 // In a real implementation, you would use a charting library like Recharts, Chart.js, or Tremor
 
-export const AreaChart = ({ className, data, categories, index, colors, valueFormatter, yAxisWidth }) => {
+export const AreaChart = ({ className, data, categories, index, colors, valueFormatter, yAxisWidth }: { className: string, data: any, categories: string[], index: string, colors: string[], valueFormatter: (value: number) => string, yAxisWidth: number }) => {
   return (
     <div className={`flex h-full w-full items-center justify-center rounded-md border border-dashed p-4 ${className}`}>
       <div className="text-center">
@@ -16,7 +16,7 @@ export const AreaChart = ({ className, data, categories, index, colors, valueFor
   )
 }
 
-export const BarChart = ({ className, data, category, index, colors, valueFormatter, layout }) => {
+export const BarChart = ({ className, data, category, index, colors, valueFormatter, layout }: { className: string, data: any, category: string, index: string, colors: string[], valueFormatter: (value: number) => string, layout: string }) => {
   return (
     <div className={`flex h-full w-full items-center justify-center rounded-md border border-dashed p-4 ${className}`}>
       <div className="text-center">
@@ -29,7 +29,7 @@ export const BarChart = ({ className, data, category, index, colors, valueFormat
   )
 }
 
-export const LineChart = ({ className, data, categories, index, colors, valueFormatter, yAxisWidth }) => {
+export const LineChart = ({ className, data, categories, index, colors, valueFormatter, yAxisWidth }: { className: string, data: any, categories: string[], index: string, colors: string[], valueFormatter: (value: number) => string, yAxisWidth: number }) => {
   return (
     <div className={`flex h-full w-full items-center justify-center rounded-md border border-dashed p-4 ${className}`}>
       <div className="text-center">
@@ -42,7 +42,7 @@ export const LineChart = ({ className, data, categories, index, colors, valueFor
   )
 }
 
-export const DonutChart = ({ className, data, category, index, colors, valueFormatter }) => {
+export const DonutChart = ({ className, data, category, index, colors, valueFormatter }: { className: string, data: any, category: string, index: string, colors: string[], valueFormatter: (value: number) => string }) => {
   return (
     <div className={`flex h-full w-full items-center justify-center rounded-md border border-dashed p-4 ${className}`}>
       <div className="text-center">

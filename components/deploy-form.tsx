@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -17,6 +17,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
+import { useAgentDeployment } from "@/app/hooks/useAgentDeployment"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
+import { Info } from "lucide-react"
 
 const formSchema = z.object({
   botToken: z.string().min(1, "Bot token is required"),
@@ -25,7 +28,20 @@ const formSchema = z.object({
 })
 
 export default function DeployForm() {
-  const [isDeploying, setIsDeploying] = useState(false)
+  const [isDeploying, setIsDeploying] = useState(false);
+  const {
+    account,
+    isPaid,
+    isLoading: isPaymentLoading,
+    payDeploymentFee,
+    checkPaymentStatus,
+  } = useAgentDeployment();
+
+  useEffect(() => {
+    if (account) {
+      checkPaymentStatus();
+    }
+  }, [account, checkPaymentStatus]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,30 +53,58 @@ export default function DeployForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!account) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
     setIsDeploying(true)
     try {
+      // Process payment first if not already paid
+      if (!isPaid) {
+        try {
+          toast.info("Processing payment...");
+          await payDeploymentFee();
+          toast.success("Payment successful!");
+        } catch (error) {
+          console.error('Payment failed:', error);
+          toast.error("Payment failed. Please try again.");
+          setIsDeploying(false);
+          return;
+        }
+      }
+
+      // Deploy the bot after payment is confirmed
       const response = await fetch("/api/deploy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
-      })
+        body: JSON.stringify({
+          ...values,
+          userAddress: account, // Include the wallet address
+        }),
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to deploy bot")
+        throw new Error("Failed to deploy bot");
       }
 
-      const data = await response.json()
-      toast.success("Bot deployed successfully!")
-      form.reset()
+      const data = await response.json();
+      toast.success("Bot deployed successfully!");
+      form.reset();
     } catch (error) {
-      toast.error("Failed to deploy bot. Please try again.")
-      console.error(error)
+      toast.error("Failed to deploy bot. Please try again.");
+      console.error(error);
     } finally {
-      setIsDeploying(false)
+      setIsDeploying(false);
     }
   }
+
+  // Format address for display
+  const formatAddress = (address: string) => {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
 
   return (
     <div className="space-y-6">
@@ -70,6 +114,25 @@ export default function DeployForm() {
           <p className="text-muted-foreground">Create and deploy a new Telegram bot agent for your community management</p>
         </div>
       </div>
+
+      {!account ? (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertTitle>Wallet required</AlertTitle>
+          <AlertDescription>
+            Please connect your wallet using the Connect Wallet button in the sidebar to deploy a bot.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <Alert variant="outline" className="border-green-500/20 bg-green-500/5">
+          <Info className="h-4 w-4 text-green-500" />
+          <AlertTitle className="text-green-500">Wallet connected</AlertTitle>
+          <AlertDescription>
+            Connected as {formatAddress(account)}
+            {isPaid && " • Deployment fee already paid"}
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Card>
         <CardContent className="pt-6">
@@ -127,8 +190,14 @@ export default function DeployForm() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isDeploying}>
-                {isDeploying ? "Deploying..." : "Deploy Bot"}
+              <Button 
+                type="submit" 
+                disabled={isDeploying || isPaymentLoading || !account}
+              >
+                {isDeploying || isPaymentLoading ? 
+                  (isPaid ? "Deploying..." : "Processing Payment...") : 
+                  (isPaid ? "Deploy Bot" : "Pay & Deploy Bot")
+                }
               </Button>
             </form>
           </Form>

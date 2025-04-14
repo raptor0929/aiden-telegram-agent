@@ -25,6 +25,7 @@ import GrowthStrategyMetrics from "@/components/metrics/growth-strategy-metrics"
 import ModerationMetrics from "@/components/metrics/moderation-metrics"
 import OverviewMetrics from "@/components/metrics/overview-metrics"
 import DeployForm from "@/components/deploy-form"
+import ConnectWallet from "@/components/ConnectWallet"
 
 interface DashboardProps {
   initialView?: string;
@@ -137,6 +138,7 @@ const Dashboard = ({ initialView = "overview" }: DashboardProps) => {
               <Button variant="outline" size="icon">
                 <Settings className="h-4 w-4" />
               </Button>
+              <ConnectWallet />
               <ModeToggle />
             </div>
           </SidebarFooter>

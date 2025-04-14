@@ -70,7 +70,7 @@ const OverviewMetrics = () => {
               categories={["Engagement", "Content", "Sentiment", "Growth", "Moderation"]}
               index="date"
               colors={["emerald", "blue", "violet", "rose", "amber"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
               yAxisWidth={40}
             />
           </CardContent>
@@ -94,7 +94,7 @@ const OverviewMetrics = () => {
               category="value"
               index="name"
               colors={["emerald", "blue", "violet", "rose", "amber"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
             />
           </CardContent>
         </Card>
@@ -137,7 +137,7 @@ const OverviewMetrics = () => {
               category="value"
               index="platform"
               colors={["violet"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
               layout="vertical"
             />
           </CardContent>
@@ -147,7 +147,7 @@ const OverviewMetrics = () => {
   )
 }
 
-const MetricCard = ({ title, value, change, icon, description }) => {
+const MetricCard = ({ title, value, change, icon, description }: { title: string, value: string, change: string, icon: React.ReactNode, description: string }) => {
   const isPositive = change.startsWith("+")
 
   return (
@@ -167,8 +167,8 @@ const MetricCard = ({ title, value, change, icon, description }) => {
   )
 }
 
-const IssueItem = ({ title, agent, priority, time }) => {
-  const getPriorityColor = (priority) => {
+const IssueItem = ({ title, agent, priority, time }: { title: string, agent: string, priority: string, time: string }) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "High":
         return "text-red-500"

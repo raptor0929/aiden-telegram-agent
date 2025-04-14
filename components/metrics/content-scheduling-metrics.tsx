@@ -65,6 +65,7 @@ const ContentSchedulingMetrics = () => {
           <CardContent>
             <BarChart
               className="h-[300px]"
+              layout="horizontal"
               data={[
                 { hour: "00:00", engagement: 15 },
                 { hour: "02:00", engagement: 10 },
@@ -82,7 +83,7 @@ const ContentSchedulingMetrics = () => {
               category="engagement"
               index="hour"
               colors={["blue"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
             />
           </CardContent>
         </Card>
@@ -222,7 +223,7 @@ const ContentSchedulingMetrics = () => {
   )
 }
 
-const MetricCard = ({ title, value, change, icon, description }) => {
+const MetricCard = ({ title, value, change, icon, description }: { title: string, value: string, change: string, icon: React.ReactNode, description: string }) => {
   const isPositive = !change.startsWith("-")
 
   return (
@@ -244,8 +245,8 @@ const MetricCard = ({ title, value, change, icon, description }) => {
   )
 }
 
-const ScheduledPost = ({ title, platform, date, time, status, type }) => {
-  const getStatusColor = (status) => {
+const ScheduledPost = ({ title, platform, date, time, status, type }: { title: string, platform: string, date: string, time: string, status: string, type: string }) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "Scheduled":
         return "bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100"
@@ -258,7 +259,7 @@ const ScheduledPost = ({ title, platform, date, time, status, type }) => {
     }
   }
 
-  const getTypeColor = (type) => {
+  const getTypeColor = (type: string) => {
     switch (type) {
       case "Announcement":
         return "bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100"

@@ -76,7 +76,7 @@ const ModerationMetrics = () => {
               categories={["moderated", "flagged"]}
               index="hour"
               colors={["amber", "red"]}
-              valueFormatter={(value) => `${value}`}
+              valueFormatter={(value: number) => `${value}`}
               yAxisWidth={50}
             />
           </CardContent>
@@ -100,7 +100,7 @@ const ModerationMetrics = () => {
               category="count"
               index="type"
               colors={["amber"]}
-              valueFormatter={(value) => `${value}`}
+              valueFormatter={(value: number) => `${value}`}
               layout="vertical"
             />
           </CardContent>
@@ -227,7 +227,7 @@ const ModerationMetrics = () => {
   )
 }
 
-const MetricCard = ({ title, value, change, icon, description }) => {
+const MetricCard = ({ title, value, change, icon, description }: { title: string, value: string, change: string, icon: React.ReactNode, description: string }) => {
   const isPositive = change.startsWith("+") || (change.startsWith("-") && title === "Avg. Response Time")
 
   return (
@@ -247,8 +247,8 @@ const MetricCard = ({ title, value, change, icon, description }) => {
   )
 }
 
-const FlaggedContent = ({ user, platform, content, reason, time, severity }) => {
-  const getPlatformColor = (platform) => {
+const FlaggedContent = ({ user, platform, content, reason, time, severity }: { user: { name: string, handle: string, avatar: string }, platform: string, content: string, reason: string, time: string, severity: string }) => {
+  const getPlatformColor = (platform: string) => {
     switch (platform) {
       case "Discord":
         return "bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100"
@@ -261,7 +261,7 @@ const FlaggedContent = ({ user, platform, content, reason, time, severity }) => 
     }
   }
 
-  const getSeverityColor = (severity) => {
+  const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "High":
         return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
@@ -320,8 +320,8 @@ const FlaggedContent = ({ user, platform, content, reason, time, severity }) => 
   )
 }
 
-const SuspiciousUser = ({ name, joinDate, flags, reason, risk }) => {
-  const getRiskColor = (risk) => {
+const SuspiciousUser = ({ name, joinDate, flags, reason, risk }: { name: string, joinDate: string, flags: number, reason: string, risk: string }) => {
+  const getRiskColor = (risk: string) => {
     switch (risk) {
       case "High":
         return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
