@@ -26,8 +26,12 @@ import ModerationMetrics from "@/components/metrics/moderation-metrics"
 import OverviewMetrics from "@/components/metrics/overview-metrics"
 import DeployForm from "@/components/deploy-form"
 
-const Dashboard = () => {
-  const [activeView, setActiveView] = useState("overview")
+interface DashboardProps {
+  initialView?: string;
+}
+
+const Dashboard = ({ initialView = "overview" }: DashboardProps) => {
+  const [activeView, setActiveView] = useState(initialView)
 
   const renderMetricsComponent = () => {
     switch (activeView) {

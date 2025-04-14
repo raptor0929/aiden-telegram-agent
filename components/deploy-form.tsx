@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 
 const formSchema = z.object({
@@ -60,64 +63,77 @@ export default function DeployForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="botToken"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bot Token</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your Telegram bot token" {...field} />
-              </FormControl>
-              <FormDescription>
-                Get this from @BotFather on Telegram
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="communityName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Community Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your community name" {...field} />
-              </FormControl>
-              <FormDescription>
-                This will be used to identify your community
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="openaiKey"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>OpenAI API Key</FormLabel>
-              <FormControl>
-                <Input 
-                  type="password" 
-                  placeholder="Enter your OpenAI API key" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormDescription>
-                Required for the AI capabilities of your bot
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={isDeploying}>
-          {isDeploying ? "Deploying..." : "Deploy Bot"}
-        </Button>
-      </form>
-    </Form>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Deploy Telegram Bot</h1>
+          <p className="text-muted-foreground">Create and deploy a new Telegram bot agent for your community management</p>
+        </div>
+      </div>
+
+      <Card>
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="botToken"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bot Token</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your Telegram bot token" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Get this from @BotFather on Telegram
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="communityName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Community Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your community name" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This will be used to identify your community
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="openaiKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>OpenAI API Key</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="password" 
+                        placeholder="Enter your OpenAI API key" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Required for the AI capabilities of your bot
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={isDeploying}>
+                {isDeploying ? "Deploying..." : "Deploy Bot"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   )
 } 
