@@ -89,7 +89,7 @@ const Dashboard = ({ initialView = "overview" }: DashboardProps) => {
                       onClick={() => setActiveView("deploy")}
                     >
                       <Plus />
-                      <span>Deploy New Bot</span>
+                      <span>Deploy New Agent</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
