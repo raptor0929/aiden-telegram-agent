@@ -16,7 +16,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar" // Using shadcn sidebar [^1]
 import { ModeToggle } from "@/components/mode-toggle"
-import { Activity, Calendar, BarChart3, TrendingUp, Shield, Home, Settings, Users } from "lucide-react"
+import { Activity, Calendar, BarChart3, TrendingUp, Shield, Home, Settings, Users, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import EngagementMetrics from "@/components/metrics/engagement-metrics"
 import ContentSchedulingMetrics from "@/components/metrics/content-scheduling-metrics"
@@ -24,9 +24,15 @@ import SentimentAnalysisMetrics from "@/components/metrics/sentiment-analysis-me
 import GrowthStrategyMetrics from "@/components/metrics/growth-strategy-metrics"
 import ModerationMetrics from "@/components/metrics/moderation-metrics"
 import OverviewMetrics from "@/components/metrics/overview-metrics"
+import DeployForm from "@/components/deploy-form"
+import ConnectWallet from "@/components/ConnectWallet"
 
-const Dashboard = () => {
-  const [activeView, setActiveView] = useState("overview")
+interface DashboardProps {
+  initialView?: string;
+}
+
+const Dashboard = ({ initialView = "overview" }: DashboardProps) => {
+  const [activeView, setActiveView] = useState(initialView)
 
   const renderMetricsComponent = () => {
     switch (activeView) {
@@ -40,6 +46,8 @@ const Dashboard = () => {
         return <GrowthStrategyMetrics />
       case "moderation":
         return <ModerationMetrics />
+      case "deploy":
+        return <DeployForm />
       case "overview":
       default:
         return <OverviewMetrics />
@@ -76,6 +84,15 @@ const Dashboard = () => {
               <SidebarGroupLabel>AI Agents</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      isActive={activeView === "deploy"}
+                      onClick={() => setActiveView("deploy")}
+                    >
+                      <Plus />
+                      <span>Deploy New Agent</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       isActive={activeView === "engagement"}
@@ -121,6 +138,7 @@ const Dashboard = () => {
               <Button variant="outline" size="icon">
                 <Settings className="h-4 w-4" />
               </Button>
+              <ConnectWallet />
               <ModeToggle />
             </div>
           </SidebarFooter>

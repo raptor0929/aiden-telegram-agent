@@ -16,10 +16,30 @@ import {
   flagSuspiciousUsers,
   enforceGuidelines,
   analyzeWeb3CommunityMetrics,
-  trainAgent
+  trainAgent,
+  mintNFT
 } from "./functions";
 
-import { getAidenState } from "./aiden";
+import { getAidogState } from "./aidog";
+
+// NFT Agent Worker
+export const NFTAgent = new GameWorker({
+  id: "nft_agent",
+  name: "NFT Agent",
+  description: `You are a specialized NFT Agent responsible for minting NFTs for community members. You mint the NFT to the user's address when they request it.`,
+  
+  functions: [
+    mintNFT
+  ],
+  
+  getEnvironment: async () => {
+    const state = await getAidogState();
+    return {
+      communityState: state,
+      nftContractAddress: process.env.NFT_CONTRACT_ADDRESS
+    };
+  }
+});
 
 // 1. Engagement Agent Worker
 export const EngagementAgent = new GameWorker({
@@ -45,7 +65,7 @@ export const EngagementAgent = new GameWorker({
   ],
   
   getEnvironment: async () => {
-    const state = await getAidenState();
+    const state = await getAidogState();
     return {
       communityState: state,
       socialChannels: ["Discord", "Telegram", "Twitter"],
@@ -77,7 +97,7 @@ export const ContentSchedulingAgent = new GameWorker({
   ],
   
   getEnvironment: async () => {
-    const state = await getAidenState();
+    const state = await getAidogState();
     return {
       communityState: state,
       pendingAnnouncements: state.pendingAnnouncements,
@@ -107,7 +127,7 @@ export const SentimentAnalysisAgent = new GameWorker({
   ],
   
   getEnvironment: async () => {
-    const state = await getAidenState();
+    const state = await getAidogState();
     return {
       communityState: state,
       sentimentScore: state.sentimentScore,
@@ -139,7 +159,7 @@ export const GrowthStrategyAgent = new GameWorker({
   ],
   
   getEnvironment: async () => {
-    const state = await getAidenState();
+    const state = await getAidogState();
     return {
       communityState: state,
       growthRate: state.growthRate,
@@ -171,7 +191,7 @@ export const ModerationAgent = new GameWorker({
   ],
   
   getEnvironment: async () => {
-    const state = await getAidenState();
+    const state = await getAidogState();
     return {
       communityState: state,
       recentIssues: state.recentIssues
@@ -179,11 +199,11 @@ export const ModerationAgent = new GameWorker({
   }
 });
 
-// Add trainAgent function to AIDEN
-export const AidenTrainingWorker = new GameWorker({
-  id: "aiden_training",
-  name: "AIDEN Training System",
-  description: `You are AIDEN's training system, responsible for training and improving the specialized agents.
+// Add trainAgent function to AIDOG
+export const AidogTrainingWorker = new GameWorker({
+  id: "aidog_training",
+  name: "AIDOG Training System",
+  description: `You are Aidog's training system, responsible for training and improving the specialized agents.
   
   Your primary responsibilities include:
   - Training agents with community-specific examples
@@ -198,7 +218,7 @@ export const AidenTrainingWorker = new GameWorker({
   ],
   
   getEnvironment: async () => {
-    const state = await getAidenState();
+    const state = await getAidogState();
     return {
       communityState: state,
       agentTraining: state.agentTraining,

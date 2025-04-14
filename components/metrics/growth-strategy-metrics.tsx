@@ -75,7 +75,7 @@ const GrowthStrategyMetrics = () => {
               categories={["members"]}
               index="date"
               colors={["rose"]}
-              valueFormatter={(value) => `${value}`}
+              valueFormatter={(value: number) => `${value}`}
               yAxisWidth={60}
             />
           </CardContent>
@@ -99,7 +99,7 @@ const GrowthStrategyMetrics = () => {
               category="value"
               index="source"
               colors={["rose", "pink", "orange", "amber", "blue"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
             />
           </CardContent>
         </Card>
@@ -167,7 +167,7 @@ const GrowthStrategyMetrics = () => {
               category="percentage"
               index="role"
               colors={["rose"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
               layout="vertical"
             />
           </CardContent>
@@ -209,7 +209,7 @@ const GrowthStrategyMetrics = () => {
   )
 }
 
-const MetricCard = ({ title, value, change, icon, description }) => {
+const MetricCard = ({ title, value, change, icon, description }: { title: string, value: string, change: string, icon: React.ReactNode, description: string }) => {
   const isPositive = !change.startsWith("-")
 
   return (
@@ -229,8 +229,8 @@ const MetricCard = ({ title, value, change, icon, description }) => {
   )
 }
 
-const GrowthCampaign = ({ title, description, progress, target, timeframe, status }) => {
-  const getStatusColor = (status) => {
+const GrowthCampaign = ({ title, description, progress, target, timeframe, status }: { title: string, description: string, progress: number, target: string, timeframe: string, status: string }) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "Active":
         return "bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100"
@@ -269,8 +269,8 @@ const GrowthCampaign = ({ title, description, progress, target, timeframe, statu
   )
 }
 
-const GrowthRecommendation = ({ title, description, impact, effort, timeframe }) => {
-  const getImpactColor = (impact) => {
+const GrowthRecommendation = ({ title, description, impact, effort, timeframe }: { title: string, description: string, impact: string, effort: string, timeframe: string }) => {
+  const getImpactColor = (impact: string) => {
     switch (impact) {
       case "High":
         return "bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100"
@@ -283,7 +283,7 @@ const GrowthRecommendation = ({ title, description, impact, effort, timeframe })
     }
   }
 
-  const getEffortColor = (effort) => {
+  const getEffortColor = (effort: string) => {
     switch (effort) {
       case "Low":
         return "bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-100"

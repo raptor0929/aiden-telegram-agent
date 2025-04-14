@@ -1,7 +1,6 @@
 import { GameAgent } from "@virtuals-protocol/game";
 import TelegramPlugin from "@virtuals-protocol/game-telegram-plugin";
 import dotenv from "dotenv";
-import path from "path";
 dotenv.config();
 
 import {
@@ -10,10 +9,12 @@ import {
   SentimentAnalysisAgent,
   GrowthStrategyAgent,
   ModerationAgent,
-  AidenTrainingWorker
+  AidogTrainingWorker,
+  NFTAgent
 } from "./workers";
+import { mintNFT } from "./functions";
 
-// Global state for AIDEN system
+// Global state for AIDOG system
 interface CommunityState {
   activeTasks: number;
   communityHealth: number; // 0-100
@@ -147,12 +148,12 @@ let communityState: CommunityState = {
 };
 
 // Function to get current state
-export const getAidenState = async () => {
+export const getAidogState = async () => {
   return communityState;
 };
 
 // Function to update state
-export const updateAidenState = (newState: Partial<CommunityState>) => {
+export const updateAidogState = (newState: Partial<CommunityState>) => {
   communityState = {
     ...communityState,
     ...newState,
@@ -239,10 +240,10 @@ export const telegramPlugin = new TelegramPlugin({
   },
 });
 
-// Create the AIDEN high-level planner agent
-export const aiden = new GameAgent(process.env.API_KEY || "", {
-  name: "AIDEN",
-  description: `You are AIDEN, an advanced AI high-level planning system for community management.
+// Create the AIDOG high-level planner agent
+export const aidog = new GameAgent(process.env.API_KEY || "", {
+  name: "AIDOG",
+  description: `You are AIDOG, an advanced AI high-level planning system for community management.
   
   Your primary responsibilities are to:
   
@@ -279,17 +280,20 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
   Rule number one: You are one of them, so just chat with them when neccesary and help them with their questions when others have not already answered and you have the answer in your knowledge base.
   Also answer questions about the community and the project and point them to the right places.
   
-  Don't reply to every message, determine when the conversation has ended`,
+  Don't reply to every message, determine when the conversation has ended.
+  
+  Keep the communication with the user through the telegram plugin. That means you keep the user updated about the tasks you're performing`,
   
   goal: "Build and maintain a thriving Web3 community through coordinated management of specialized AI agents focused on engagement, content scheduling, sentiment analysis, growth strategy, and moderation, with an emphasis on community-specific training and continuous improvement.",
   
   workers: [
+    NFTAgent,
     EngagementAgent,
     ContentSchedulingAgent,
     SentimentAnalysisAgent,
     GrowthStrategyAgent,
     ModerationAgent,
-    AidenTrainingWorker,
+    AidogTrainingWorker,
     telegramPlugin.getWorker({
       // Define the functions that the worker can perform, by default it will use the all functions defined in the plugin
       functions: [
@@ -299,9 +303,10 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
         telegramPlugin.createPollFunction,
         telegramPlugin.sendMediaFunction,
         telegramPlugin.deleteMessageFunction,
+        mintNFT
       ],
       getEnvironment: async () => {
-        const state = await getAidenState();
+        const state = await getAidogState();
         return {
           communityState: state
         };
@@ -309,5 +314,5 @@ export const aiden = new GameAgent(process.env.API_KEY || "", {
     }),
   ],
   
-  getAgentState: getAidenState
+  getAgentState: getAidogState
 }); 

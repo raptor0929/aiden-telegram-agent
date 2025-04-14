@@ -75,7 +75,7 @@ const EngagementMetrics = () => {
               categories={["Discord", "Twitter", "Telegram"]}
               index="hour"
               colors={["indigo", "cyan", "blue"]}
-              valueFormatter={(value) => `${value} msgs`}
+              valueFormatter={(value: number) => `${value} msgs`}
               yAxisWidth={50}
             />
           </CardContent>
@@ -99,7 +99,7 @@ const EngagementMetrics = () => {
               category="count"
               index="topic"
               colors={["violet"]}
-              valueFormatter={(value) => `${value} msgs`}
+              valueFormatter={(value: number) => `${value} msgs`}
               layout="vertical"
             />
           </CardContent>
@@ -148,7 +148,7 @@ const EngagementMetrics = () => {
   )
 }
 
-const MetricCard = ({ title, value, change, icon, description }) => {
+const MetricCard = ({ title, value, change, icon, description }: { title: string, value: string, change: string, icon: React.ReactNode, description: string }) => {
   const isPositive = !change.startsWith("-")
 
   return (
@@ -168,8 +168,8 @@ const MetricCard = ({ title, value, change, icon, description }) => {
   )
 }
 
-const InteractionItem = ({ user, platform, message, time, priority }) => {
-  const getPlatformColor = (platform) => {
+const InteractionItem = ({ user, platform, message, time, priority }: { user: { name: string, handle: string, avatar: string }, platform: string, message: string, time: string, priority: string }) => {
+  const getPlatformColor = (platform: string) => {
     switch (platform) {
       case "Discord":
         return "bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100"
@@ -182,7 +182,7 @@ const InteractionItem = ({ user, platform, message, time, priority }) => {
     }
   }
 
-  const getPriorityColor = (priority) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "High":
         return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"

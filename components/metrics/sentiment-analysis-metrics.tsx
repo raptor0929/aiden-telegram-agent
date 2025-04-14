@@ -74,7 +74,7 @@ const SentimentAnalysisMetrics = () => {
               categories={["sentiment"]}
               index="date"
               colors={["violet"]}
-              valueFormatter={(value) => `${value}/10`}
+              valueFormatter={(value: number) => `${value}/10`}
               yAxisWidth={40}
             />
           </CardContent>
@@ -97,7 +97,7 @@ const SentimentAnalysisMetrics = () => {
               category="score"
               index="platform"
               colors={["violet"]}
-              valueFormatter={(value) => `${value}/10`}
+              valueFormatter={(value: number) => `${value}/10`}
               layout="vertical"
             />
           </CardContent>
@@ -137,7 +137,7 @@ const SentimentAnalysisMetrics = () => {
               category="value"
               index="sentiment"
               colors={["emerald", "blue", "rose"]}
-              valueFormatter={(value) => `${value}%`}
+              valueFormatter={(value: number) => `${value}%`}
             />
           </CardContent>
         </Card>
@@ -178,7 +178,7 @@ const SentimentAnalysisMetrics = () => {
   )
 }
 
-const MetricCard = ({ title, value, change, icon, description }) => {
+const MetricCard = ({ title, value, change, icon, description }: { title: string, value: string, change: string, icon: React.ReactNode, description: string }) => {
   const isPositive = !change.startsWith("-")
 
   return (
@@ -198,8 +198,8 @@ const MetricCard = ({ title, value, change, icon, description }) => {
   )
 }
 
-const SentimentTopic = ({ topic, score, positive, neutral, negative }) => {
-  const getScoreColor = (score) => {
+const SentimentTopic = ({ topic, score, positive, neutral, negative }: { topic: string, score: number, positive: number, neutral: number, negative: number }) => {
+  const getScoreColor = (score: number) => {
     if (score >= 8.5) return "text-emerald-500"
     if (score >= 7.0) return "text-blue-500"
     if (score >= 5.0) return "text-amber-500"
@@ -226,8 +226,8 @@ const SentimentTopic = ({ topic, score, positive, neutral, negative }) => {
   )
 }
 
-const SentimentAlert = ({ title, description, platform, severity, time }) => {
-  const getSeverityColor = (severity) => {
+const SentimentAlert = ({ title, description, platform, severity, time }: { title: string, description: string, platform: string, severity: string, time: string }) => {
+  const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "High":
         return "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100"
@@ -240,7 +240,7 @@ const SentimentAlert = ({ title, description, platform, severity, time }) => {
     }
   }
 
-  const getPlatformColor = (platform) => {
+  const getPlatformColor = (platform: string) => {
     switch (platform) {
       case "Discord":
         return "bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100"
